@@ -1,13 +1,13 @@
-// api-gateway/index.js
+
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Importar CORS
+const cors = require('cors'); 
 require('dotenv').config();
 
 const app = express();
 
-app.use(cors()); // Habilitar CORS
-app.use(express.json()); // Middleware para parsear JSON
+app.use(cors());
+app.use(express.json()); 
 
 // Rutas de Autenticación
 app.use('/api/auth', (req, res) => {

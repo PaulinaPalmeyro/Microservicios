@@ -10,12 +10,6 @@ const {
 
 const router = express.Router();
 
-// Middleware para registrar solicitudes
-router.use((req, res, next) => {
-  console.log(`Recibiendo ${req.method} en /api/sculptures${req.originalUrl}`);
-  next();
-});
-
 // Rutas
 router.get('/', getAllSculptures);
 router.post('/', createSculpture);

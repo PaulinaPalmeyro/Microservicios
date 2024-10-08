@@ -11,10 +11,6 @@ connectDB();
 // Middleware para parsear JSON
 app.use(express.json());
 
-// Ruta de ejemplo
-app.get('/', (req, res) => {
-  res.send('API de Esculturas funcionando');
-});
 
 // Rutas de esculturas
 app.use('/api/sculptures', sculptureRoutes);
