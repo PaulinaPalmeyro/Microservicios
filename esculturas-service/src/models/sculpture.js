@@ -1,4 +1,4 @@
-// src/models/Sculpture.js
+
 const mongoose = require('mongoose');
 
 const SculptureSchema = new mongoose.Schema({

@@ -11,10 +11,45 @@ h1, h2 {
 }
 
 form {
-    margin: 10px 0;
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
 }
 
 input, button {
     margin: 5px;
-    padding: 8px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+input:focus, button:focus {
+    outline: none;
+    border-color: #007bff; /* Color azul al enfocar */
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+}
+
+#sculpture-list div {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between; /* Espacio entre los elementos */
+}
+
+#sculpture-list button {
+    margin-left: 10px; /* Margen a la izquierda para separar botones */
 }

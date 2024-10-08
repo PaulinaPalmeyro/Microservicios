@@ -1,4 +1,4 @@
-// src/routes/sculptureRoutes.js
+
 const express = require('express');
 const {
   getAllSculptures,

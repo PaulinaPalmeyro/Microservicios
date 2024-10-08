@@ -1,4 +1,4 @@
-// src/controllers/sculptureController.js
+
 const Sculpture = require('../models/sculpture');
 
 // Obtener todas las esculturas

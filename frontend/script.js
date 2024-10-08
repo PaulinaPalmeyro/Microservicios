@@ -1,6 +1,7 @@
 // frontend/script.js
 const API_BASE_URL = 'http://localhost:3000/api';
 let authToken = '';
+let editingSculptureId = null; // Para almacenar el ID de la escultura que se está editando
 
 // Función para mostrar mensajes
 const showMessage = (message) => {
@@ -11,6 +12,7 @@ const showMessage = (message) => {
 // Función para mostrar la sección de esculturas
 const showSculptureSection = () => {
     document.getElementById('sculpture-section').style.display = 'block';
+    fetchSculptures(); // Cargar esculturas al mostrar la sección
 };
 
 // Función para manejar el registro
@@ -74,8 +76,11 @@ document.getElementById('create-sculpture-form').addEventListener('submit', asyn
     const location = document.getElementById('sculpture-location').value;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/sculptures`, {
-            method: 'POST',
+        const method = editingSculptureId ? 'PUT' : 'POST';
+        const url = editingSculptureId ? `${API_BASE_URL}/sculptures/${editingSculptureId}` : `${API_BASE_URL}/sculptures`;
+
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`,
@@ -84,9 +89,15 @@ document.getElementById('create-sculpture-form').addEventListener('submit', asyn
         });
 
         if (response.ok) {
-            alert('Escultura creada con éxito');
+            if (editingSculptureId) {
+                showMessage('Escultura actualizada con éxito');
+            } else {
+                alert('Escultura creada con éxito');
+            }
+            resetForm();
+            fetchSculptures(); // Refrescar la lista de esculturas
         } else {
-            alert('Error creando escultura');
+            alert('Error creando o actualizando escultura');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -94,7 +105,7 @@ document.getElementById('create-sculpture-form').addEventListener('submit', asyn
 });
 
 // Función para obtener las esculturas
-document.getElementById('fetch-sculptures').addEventListener('click', async () => {
+const fetchSculptures = async () => {
     try {
         const response = await fetch(`${API_BASE_URL}/sculptures`, {
             headers: {
@@ -110,6 +121,19 @@ document.getElementById('fetch-sculptures').addEventListener('click', async () =
             sculptures.forEach((sculpture) => {
                 const div = document.createElement('div');
                 div.textContent = `${sculpture.name} por ${sculpture.artist} (${sculpture.year}) - ${sculpture.material} en ${sculpture.location}`;
+                
+                // Botón de editar
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.onclick = () => editSculpture(sculpture);
+                
+                // Botón de eliminar
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Eliminar';
+                deleteButton.onclick = () => deleteSculpture(sculpture._id);
+                
+                div.appendChild(editButton);
+                div.appendChild(deleteButton);
                 sculptureList.appendChild(div);
             });
         } else {
@@ -119,4 +143,43 @@ document.getElementById('fetch-sculptures').addEventListener('click', async () =
         console.error('Error:', error);
         showMessage('Error obteniendo las esculturas. Por favor, intenta de nuevo.');
     }
-});
+};
+
+// Función para eliminar esculturas
+const deleteSculpture = async (id) => {
+    if (confirm('¿Estás seguro de que deseas eliminar esta escultura?')) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/sculptures/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                },
+            });
+
+            if (response.ok) {
+                alert('Escultura eliminada con éxito');
+                fetchSculptures(); // Refrescar la lista de esculturas
+            } else {
+                alert('Error eliminando escultura');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+};
+
+// Función para editar esculturas
+const editSculpture = (sculpture) => {
+    document.getElementById('sculpture-name').value = sculpture.name;
+    document.getElementById('sculpture-artist').value = sculpture.artist;
+    document.getElementById('sculpture-year').value = sculpture.year;
+    document.getElementById('sculpture-material').value = sculpture.material;
+    document.getElementById('sculpture-location').value = sculpture.location;
+    editingSculptureId = sculpture._id; // Guardar el ID para editar
+};
+
+// Función para resetear el formulario
+const resetForm = () => {
+    document.getElementById('create-sculpture-form').reset();
+    editingSculptureId = null; // Resetear ID de edición
+};
